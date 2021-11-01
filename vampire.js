@@ -9,7 +9,8 @@ class Vampire {
   /** Simple tree methods **/
 
   // Adds the vampire as an offspring of this vampire
-  addOffspring(vampire) {
+   // Adds the vampire as an offspring of this vampire
+   addOffspring(vampire) {
     this.offspring.push(vampire);
     vampire.creator = this;
     console.log("Added offspring", {vampire}, "to ", this);
@@ -31,6 +32,93 @@ class Vampire {
     const curRank = this.numberOfVampiresFromOriginal;
     const vampRank = vampire.numberOfVampiresFromOriginal;
     return (curRank < vampRank);
+  }
+
+  getAllAncestors() {
+    let curAncestors = [];
+    for(let cur = this; (cur); cur = cur.creator) {
+      curAncestors.push(cur);
+    }
+    console.log({curAncestors});
+    return curAncestors;
+  }
+
+  /** Tree traversal methods **/
+
+  // Returns the vampire object with that name, or null if no vampire exists with that name
+  vampireWithName(name) {
+    console.log("Find ", name, " under ", this);
+    if (!name) {
+      console.log("Invalid name: ", name);
+      return null;
+    }
+
+    if (name === this.name) {
+      console.log(name, " Found !!! : ", this);
+      return this;
+    }
+
+    for (const child of this.offspring) {
+      if (name === child.name) {
+        console.log(name, " Found !!! : ", child);
+        return child;
+      }
+      console.log("Trying subtree of child: ", child);
+      let nodeFound = child.vampireWithName(name);
+      if (nodeFound) {
+        console.log(name, " Found !!! : ", nodeFound, " under ", child);
+        // pop out the found node for given name
+        return nodeFound;
+      }
+      console.log("finished search in subtree of child: ", child);
+    }
+
+    console.log("finished search in subtree of node: ", this);
+    // did not find name in the whole tree
+    // of this as root so return null
+    console.log(name, " Not Found, returning null !!");
+    return null;
+  }
+
+
+
+  // Returns the total number of vampires that exist
+  get totalDescendents() {
+    let descendants = this.getAlllDescendants();
+    console.log(this, " total descendants: ", descendants);
+    return descendants.length;
+  }
+
+  getAlllDescendants() {
+    let descendants = [];
+    this.fillAllDescendants(descendants);
+    console.log(this, " has descendants: ", descendants);
+    return descendants;
+  }
+
+  fillAllDescendants(descendants) {
+    for (const child of this.offspring) {
+      console.log("Add descendant child: ", child, " of node :", this);
+      descendants.push(child);
+      console.log("fill descendants of child: ", child, " of node: ", this);
+      child.fillAllDescendants(descendants);
+      console.log("Finished filling descendants of child: ", child, " of node: ", this);
+    }
+  }
+
+  // Returns an array of all the vampires that were converted after 1980
+  get allMillennialVampires() {
+    let millennials = [];
+    if (this.yearConverted > 1979) {
+      millennials.push(this);
+    }
+    let descendants = this.getAlllDescendants();
+    for (const child of descendants) {
+      if (child.yearConverted > 1979) {
+        millennials.push(child);
+      }
+    }
+    return millennials;
   }
 
   /** Stretch **/
