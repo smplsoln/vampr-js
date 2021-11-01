@@ -10,32 +10,58 @@ class Vampire {
 
   // Adds the vampire as an offspring of this vampire
   addOffspring(vampire) {
-
+    this.offspring.push(vampire);
+    vampire.creator = this;
+    console.log("Added offspring", {vampire}, "to ", this);
   }
 
   // Returns the total number of vampires created by that vampire
   get numberOfOffspring() {
-
+    return this.offspring.length;
   }
 
   // Returns the number of vampires away from the original vampire this vampire is
   get numberOfVampiresFromOriginal() {
-
+    const ancestors = this.getAllAncestors();
+    return ancestors.length - 1;
   }
 
   // Returns true if this vampire is more senior than the other vampire. (Who is closer to the original vampire)
   isMoreSeniorThan(vampire) {
-
+    const curRank = this.numberOfVampiresFromOriginal;
+    const vampRank = vampire.numberOfVampiresFromOriginal;
+    return (curRank < vampRank);
   }
 
   /** Stretch **/
 
   // Returns the closest common ancestor of two vampires.
-  // The closest common anscestor should be the more senior vampire if a direct ancestor is used.
+  // The closest common ancestor should be the more senior vampire if a direct ancestor is used.
   // For example:
-  // * when comparing Ansel and Sarah, Ansel is the closest common anscestor.
-  // * when comparing Ansel and Andrew, Ansel is the closest common anscestor.
+  // * when comparing Ansel and Sarah, Ansel is the closest common ancestor.
+  // * when comparing Ansel and Andrew, Ansel is the closest common ancestor.
+  getAllAncestors() {
+    let curAncestors = [];
+    for(let cur = this; (cur); cur = cur.creator) {
+      curAncestors.push(cur);
+    }
+    console.log({curAncestors});
+    return curAncestors;
+  }
+
   closestCommonAncestor(vampire) {
+    let curAncestors = this.getAllAncestors();
+    let vampAncestors = vampire.getAllAncestors();
+    for(const curAncestor of curAncestors) {
+      if(!curAncestor) return;
+      for (const vampAncestor of vampAncestors) {
+        if (!vampAncestor) return;
+        if (curAncestor.name === vampAncestor.name) {
+          console.log("Closest common ancestor of ", this, " and ", vampire, " is ", curAncestor);
+          return curAncestor;
+        }
+      }
+    }
 
   }
 }
