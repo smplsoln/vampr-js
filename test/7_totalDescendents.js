@@ -33,9 +33,13 @@ describe("Vampire", function() {
     });
 
     it("should give the total descendents underneath a specific vampire", () => {
+      console.log(rootVampire, " descendants : ", rootVampire.totalDescendents);
       expect(rootVampire.totalDescendents).to.equal(8);
+      console.log(offspring1, " descendants : ", offspring1.totalDescendents);
       expect(offspring1.totalDescendents).to.equal(0);
+      console.log(offspring2, " descendants : ", offspring2.totalDescendents);
       expect(offspring2.totalDescendents).to.equal(1);
+      console.log(offspring3, " descendants : ", offspring3.totalDescendents);
       expect(offspring3.totalDescendents).to.equal(4);
     });
   });
